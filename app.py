@@ -1,3 +1,9 @@
+#_______________________________________________________________________________________
+"""
+Dios bendiga este negocio y la properidad nos acompañe de la mano de Dios y su santo hijo AMEN
+"""
+#_______________________________________________________________________________________
+
 from flask import Flask, request, json, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -9,13 +15,14 @@ import openai
 from prompt_ia import get_message
 from io import StringIO # Importar StringIO para el manejo de credenciales
 import threading
+import psycopg2
 
 load_dotenv()
 #_______________________________________________________________________________________
 """
-Version 1:
+Version 3:
 Descripción: Primer Bot de Whatsapp para la empresa TicAll Media, 
-integrado con IA
+integrado con IA de OpenAI
 
 Caracteristicas: 
 
@@ -25,6 +32,12 @@ Caracteristicas:
 - Se actualiza presentación del portafolio como Lista, y prompt invoca lista no la genera
 - Se actualiza estado del usuario, para su categorización como posible cliente
 
+Actualiza 15/07/2025:
+-Se cambia bd SQLite a PostgreSQl para mejorar la persistencia de los datos
+-Tambien para utilizar mas de Una API para consultar la misma fuente de datos
+
+
+
 """
 #_______________________________________________________________________________________
 app = Flask(__name__)
@@ -33,7 +46,7 @@ app = Flask(__name__)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Configuración de base de datos SQLITE
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///metapython.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -48,9 +61,19 @@ class Log(db.Model):
     etiqueta_campana = db.Column(db.Text)
     agente = db.Column(db.Text)
 
+class UsuariosBot(db.Model):
+    id_bot = db.Column(db.Integer, primary_key=True)
+    lang = db.Column(db.Text)
+    telefono_usuario_id = db.Column(db.Text) #es ell mismo whatsapp_id
+    crm_contact_id = db.Column(db.Text)
+    nombre_preferido = db.Column(db.Text)
+    estado_usuario = db.Column(db.Text)
+    fecha_y_hora = db.Column(db.DateTime, default=datetime.utcnow)
+
 # Crear tabla si no existe
 with app.app_context():
     db.create_all()
+    logging.info(f"Creación de tablas usuario y de conversacion...")
 #_______________________________________________________________________________________
 
 # --- Recursos ---

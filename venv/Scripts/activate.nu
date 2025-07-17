@@ -32,7 +32,7 @@ export-env {
       }
     }
 
-    let virtual_env = r#'C:\Users\trono\Downloads\TICALLMEDIA\Beta_ticallmedia_w\venv'#
+    let virtual_env = r#'C:\Users\trono\Downloads\TICALLMEDIA\Alpha_ticallmedia_w\venv'#
     let bin = r#'Scripts'#
 
     let is_windows = ($nu.os-info.family) == 'windows'
