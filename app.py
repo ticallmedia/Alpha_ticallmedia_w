@@ -3,7 +3,6 @@
 Dios bendiga este negocio y la properidad nos acompañe de la mano de Dios y su santo hijo AMEN
 """
 #_______________________________________________________________________________________
-
 from flask import Flask, request, json, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -35,8 +34,6 @@ Caracteristicas:
 Actualiza 15/07/2025:
 -Se cambia bd SQLite a PostgreSQl para mejorar la persistencia de los datos
 -Tambien para utilizar mas de Una API para consultar la misma fuente de datos
-
-
 
 """
 #_______________________________________________________________________________________
@@ -286,14 +283,19 @@ def procesar_y_responder_mensaje(telefono_id, mensaje_recibido):
         'agente': AGENTE_BOT
     }
 
+    saludo_clave = ["hola","hi","hello","start","alo"]
+    portafolio_clave = ["portafolio","catálogo","servicios","productos"]
+
     # Delega el registro en la DB y la exportación a Google Sheets a un hilo
     threading.Thread(target=_agregar_mensajes_log_thread_safe, args=(json.dumps(log_data_in),)).start()
 
-    if mensaje_procesado == "hola" or mensaje_procesado == "hi" or mensaje_procesado == "start":
+    #if mensaje_procesado == "hola" or mensaje_procesado == "hi" or mensaje_procesado == "hello":
+    if "hola" in mensaje_procesado  or any(palabra in mensaje_procesado for palabra in saludo_clave):
         user_language = "es"
         ESTADO_USUARIO = "nuevo"
         send_initial_messages(ESTADO_USUARIO,telefono_id, user_language)        
-    elif mensaje_procesado == "btn_si1":
+    #elif mensaje_procesado == "btn_si1" or mensaje_procesado in ["portafolio","servicios","productos"]:
+    elif "btn_si1" in  mensaje_procesado or any (palabra in mensaje_procesado for palabra in portafolio_clave):
         user_language = "es"
         ESTADO_USUARIO = "interesado"
         request1_messages(ESTADO_USUARIO, telefono_id, user_language)  
