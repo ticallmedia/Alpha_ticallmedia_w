@@ -35,6 +35,9 @@ Actualiza 15/07/2025:
 -Se cambia bd SQLite a PostgreSQl para mejorar la persistencia de los datos
 -Tambien para utilizar mas de Una API para consultar la misma fuente de datos
 
+Actualiza 21/07/2025:
+-Configuracion token fijo y numero de telefono en meta
+
 """
 #_______________________________________________________________________________________
 app = Flask(__name__)
