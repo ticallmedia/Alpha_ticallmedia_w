@@ -1,3 +1,8 @@
+#_______________________________________________________________________________________
+"""
+Dios bendiga este negocio y la properidad nos acompañe de la mano de Dios y su santo hijo AMEN
+"""
+#_______________________________________________________________________________________
 from flask import Flask, request, json, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -10,12 +15,11 @@ from prompt_ia import get_message
 from io import StringIO # Importar StringIO para el manejo de credenciales
 import threading
 import psycopg2
-from langdetect import detect #detecta idioma
 
 load_dotenv()
 #_______________________________________________________________________________________
 """
-Version 4:
+Version 3:
 Descripción: Primer Bot de Whatsapp para la empresa TicAll Media, 
 integrado con IA de OpenAI
 
@@ -31,12 +35,8 @@ Actualiza 15/07/2025:
 -Se cambia bd SQLite a PostgreSQl para mejorar la persistencia de los datos
 -Tambien para utilizar mas de Una API para consultar la misma fuente de datos
 
-Actualiza 05/08/2025:
--Se agrega la libreria 'langdetect', con el fin de poder identificar el idioma del usuario
--Se crean las funciones: actualizar_idioma_si_cambia, guardar_idioma_usuario, obtener_idioma_usuario, detectar_idioma  
-para guardar, actualiza y obtener el idioma
--se crea la tabal 'UsuarioLang' para capturar el idioma
--se actualizan funciones para que siempre soliciten idioma
+Actualiza 21/07/2025:
+-Configuracion token fijo y numero de telefono en meta
 
 """
 #_______________________________________________________________________________________
@@ -60,10 +60,6 @@ class Log(db.Model):
     estado_usuario = db.Column(db.Text)
     etiqueta_campana = db.Column(db.Text)
     agente = db.Column(db.Text)
-
-class UsuarioLang(db.Model):
-    telefono_usuario_id = db.Column(db.Text, primary_key=True) #es ell mismo whatsapp_id
-    lang = db.Column(db.Text)
 
 class UsuariosBot(db.Model):
     id_bot = db.Column(db.Integer, primary_key=True)
@@ -129,50 +125,6 @@ def _agregar_mensajes_log_thread_safe(log_data_json):
             logging.error(f"Error añadiendo log a DB (hilo): {e}")
 
 
-def guardar_idioma_usuario(telefono_usuario_id, idioma):
-    #Guarda o actualiza el idioma del usuario.
-    usuario = UsuarioLang.query.filter_by(telefono_usuario_id=telefono_usuario_id).first()
-    if usuario:
-        usuario.lang = idioma
-    else:
-        usuario = UsuarioLang(telefono_usuario_id=telefono_usuario_id, lang=idioma)
-        db.session.add(usuario)
-    db.session.commit()
-
-def obtener_idioma_usuario(telefono_usuario_id):
-    usuario = UsuarioLang.query.filter_by(telefono_usuario_id=telefono_usuario_id).first()
-    if usuario:
-        logging.info(f"El idioma del usuario {telefono_usuario_id}  es: {usuario.lang}")
-        return usuario.lang
-    logging.info(f"El usuario {telefono_usuario_id} no tiene idioma se le asiga: es")
-    return 'es'
-
-def actualizar_idioma_si_cambia(telefono_usuario_id, mensaje):
-    """Detecta y actualiza el idioma del usuario si cambió."""
-    idioma_detectado = detectar_idioma(mensaje)
-    idioma_actual = obtener_idioma_usuario(telefono_usuario_id)
-
-    if idioma_detectado != idioma_actual:        
-        guardar_idioma_usuario(telefono_usuario_id, idioma_detectado)
-        logging.info(f"Actualiza idioma del usuario {telefono_usuario_id} como: {idioma_detectado}")
-    
-    logging.info(f"El idioma del usuario {telefono_usuario_id} no cambio, es: {idioma_detectado}")
-    return idioma_detectado
-
-# --- detecta el idioma si es español o ingles ---
-def detectar_idioma(texto):
-    try:
-        idioma = detect(texto)
-        if idioma == 'es':
-            return 'es' #español
-        elif idioma == 'en':
-            return 'en' #ingles
-        else:
-            return 'en'
-    except:
-        return 'en' #por defecto español
-    
-
 # --- API WhatsApp para el envío de mensajes ---
 def send_whatsapp_message(data):
     """Envía un mensaje a través de la API de WhatsApp Business."""
@@ -199,86 +151,16 @@ def send_whatsapp_message(data):
 """"Función para cargar o actualizar prompt de la IA, y mantener el hilo de
 conversación con un usuario"""
 
-# Diccionarios de control
-user_profiles = {}   # datos fijos del usuario (nombre, gustos, etc.)
-user_histories = {}  # historial de la conversación
-user_languages = {}  # idioma actual por usuario
+user_histories = {}
 
-def send_ia_prompt(prompt,telefono_id,lang):
+def send_ia_prompt(prompt,telefono_id):
     try:
         openai.api_key = os.environ.get("OPENAI_API_KEY")
-        message_prompt = get_message(lang, prompt)
+        message_prompt = get_message("en", prompt)
 
-        """"
-        #version 1
-
-        #permite recordar la conversacion con el usuario, pero no permite refrescar el idioma
         if telefono_id not in user_histories:
-            user_histories[telefono_id] = [
-                {"role": "system", "content": message_prompt},
-                {"role": "system", "content": f"Please always respond in '{lang}' language."}
-                ]
-        """
-        """
-        #No recuerda la conversacion del usuario y permite refrescar el idioma
-        user_histories[telefono_id] = [
-            {"role": "system", "content": message_prompt},
-            {"role": "system", "content": f"Please always respond in '{lang}' language."}
-            ]
-        """
-        """
-        #version 2
-        # Si ya hay historial, actualiza el primer mensaje si es de tipo 'system'
-        if telefono_id in user_histories:
-            # Reemplazar el primer system prompt (o agregar si no está)
-            user_histories[telefono_id][0] = {"role": "system", "content": message_prompt}
-            
-            # Verifica si hay un segundo mensaje indicando el idioma
-            if len(user_histories[telefono_id]) > 1 and user_histories[telefono_id][1]['role'] == "system":
-                user_histories[telefono_id][1] = {"role": "system", "content": f"Please always respond in '{lang}' language."}
-            else:
-                user_histories[telefono_id].insert(1, {"role": "system", "content": f"Please always respond in '{lang}' language."})
-        else:
-            # No hay historial, lo creamos
-            user_histories[telefono_id] = [
-                {"role": "system", "content": message_prompt},
-                {"role": "system", "content": f"Please always respond in '{lang}' language."}
-                ]
+            user_histories[telefono_id] = [{"role": "system", "content": message_prompt}]
         
-        """
-
-        #version 3
-
-        """Actualiza el prompt e idioma del usuario, manteniendo su perfil fijo."""
-        # Obtiene perfil si existe
-        perfil = user_profiles.get(telefono_id, {})
-
-        # Si el idioma cambió o no hay historial → reinicia historial
-        if telefono_id not in user_histories or user_languages.get(telefono_id) != lang:
-            user_histories[telefono_id] = [
-                {"role": "system", "content": message_prompt},
-                {"role": "system", "content": f"Please always respond in '{lang}' language."},
-                {"role": "system", "content": f"User profile: {perfil}"}
-            ]
-            user_languages[telefono_id] = lang
-
-        else:
-            # Si el idioma no cambió → actualiza prompts en el historial existente
-            user_histories[telefono_id][0] = {"role": "system", "content": message_prompt} #carga el prompt
-
-            if len(user_histories[telefono_id]) > 1 and user_histories[telefono_id][1]['role'] == "system":
-                user_histories[telefono_id][1] = {"role": "system", "content": f"Please always respond in '{lang}' language."}
-            else:
-                user_histories[telefono_id].insert(1, {"role": "system", "content": f"Please always respond in '{lang}' language."})
-
-            # Actualiza o reinyecta el perfil si ya existe
-            if perfil:
-                if len(user_histories[telefono_id]) < 3 or user_histories[telefono_id][2]['role'] != "system":
-                    user_histories[telefono_id].append({"role": "system", "content": f"User profile: {perfil}"})
-                else:
-                    user_histories[telefono_id][2] = {"role": "system", "content": f"User profile: {perfil}"}
-
-
         logging.info(f"Consulta a la IA: {user_histories}")
     except Exception as e:
         logging.error(f"Error con la IA: {e}")
@@ -318,7 +200,7 @@ def send_ia_message(ESTADO_USUARIO, telefono_id, message_text, chat_history_prom
         # Agregar respuesta del bot al historial
         chat_history.append({"role": "assistant", "content": respuesta_bot})
 
-        send_message_and_log(lang,ESTADO_USUARIO,telefono_id, respuesta_bot, 'text')
+        send_message_and_log(ESTADO_USUARIO,telefono_id, respuesta_bot, 'text')
 
         logging.info(f"Consulta a la IA: {respuesta_bot}")
     except Exception as e:
@@ -404,62 +286,46 @@ def procesar_y_responder_mensaje(telefono_id, mensaje_recibido):
         'agente': AGENTE_BOT
     }
 
-
     saludo_clave = ["hola","hi","hello","start","alo"]
-    portafolio_clave = ["portafolio","catálogo","servicios","productos","portfolio", "catalog", "services", "products"]
-    asesoria = ["asesor", "consultor", "consejero", "especialista", "orientador", "experto", "mentor","advisor", "consultant", "counselor", "specialist", "guide", "expert", "mentor"]
+    portafolio_clave = ["portafolio","catálogo","servicios","productos"]
 
     # Delega el registro en la DB y la exportación a Google Sheets a un hilo
     threading.Thread(target=_agregar_mensajes_log_thread_safe, args=(json.dumps(log_data_in),)).start()
 
     #if mensaje_procesado == "hola" or mensaje_procesado == "hi" or mensaje_procesado == "hello":
     if "hola" in mensaje_procesado  or any(palabra in mensaje_procesado for palabra in saludo_clave):
-        #user_language = "es"
-        user_language = actualizar_idioma_si_cambia(telefono_id, mensaje_recibido)
-
+        user_language = "en"
         ESTADO_USUARIO = "nuevo"
         send_initial_messages(ESTADO_USUARIO,telefono_id, user_language)        
     #elif mensaje_procesado == "btn_si1" or mensaje_procesado in ["portafolio","servicios","productos"]:
     elif "btn_si1" in  mensaje_procesado or any (palabra in mensaje_procesado for palabra in portafolio_clave):
-        #user_language = "es"
-        user_language = obtener_idioma_usuario(telefono_id)   
-
+        user_language = "en"
         ESTADO_USUARIO = "interesado"
         request1_messages(ESTADO_USUARIO, telefono_id, user_language)  
     elif mensaje_procesado == "btn_no1" or mensaje_procesado == "no":
-        #user_language = "es"
-        user_language = obtener_idioma_usuario(telefono_id)  
-
+        user_language = "en"
         ESTADO_USUARIO = "no_interesado"
-        chat_history = send_ia_prompt("prompt_ia_no", telefono_id,user_language)
+        chat_history = send_ia_prompt("prompt_ia_no", telefono_id)
         send_ia_message(ESTADO_USUARIO, telefono_id, mensaje_procesado, chat_history, user_language)
     elif mensaje_procesado in ["btn_1","btn_2","btn_3","btn_4","btn_5","btn_6","btn_7","btn_8","btn_9"]:
-        #user_language = "es"
-        user_language = obtener_idioma_usuario(telefono_id)  
-
+        user_language = "en"
         ESTADO_USUARIO = "interesado"
-        chat_history = send_ia_prompt("prompt_ia_yes", telefono_id,user_language)
+        chat_history = send_ia_prompt("prompt_ia_yes", telefono_id)
         send_ia_message(ESTADO_USUARIO, telefono_id, mensaje_procesado, chat_history, user_language)
     elif mensaje_procesado in ["btn_0" ,"asesor"]:
-        #user_language = "es"
-        user_language = obtener_idioma_usuario(telefono_id)  
-
+        user_language = "en"
         ESTADO_USUARIO = "quiere_asesor"
         send_adviser_messages(ESTADO_USUARIO,telefono_id, mensaje_procesado,  user_language)
     elif mensaje_procesado  in ["salir", "exit", "quit"]:
-        #user_language = "es"
-        user_language = obtener_idioma_usuario(telefono_id)  
-
+        user_language = "en"
         ESTADO_USUARIO = "calificado"
-        chat_history = send_ia_prompt("prompt_ia_yes", telefono_id,user_language)
+        chat_history = send_ia_prompt("prompt_ia_yes", telefono_id)
         send_ia_message(ESTADO_USUARIO, telefono_id, mensaje_procesado, chat_history, user_language)
     else:
-        #user_language = "es"
-        user_language = obtener_idioma_usuario(telefono_id)  
-
+        user_language = "en"
         #no se actualiza estado esperando que herede la ultma condición de: ESTADO_USUARIO
         ESTADO_USUARIO = "neutro"
-        chat_history = send_ia_prompt("prompt_ia_yes", telefono_id,user_language)
+        chat_history = send_ia_prompt("prompt_ia_yes", telefono_id)
         send_ia_message(ESTADO_USUARIO, telefono_id, mensaje_procesado, chat_history, user_language)
 
 
@@ -469,11 +335,11 @@ def send_initial_messages(ESTADO_USUARIO,telefono_id, lang):
     # Saludo en el idioma elegido
 
     message_response = get_message(lang, "welcome_initial")
-    send_message_and_log(lang,ESTADO_USUARIO, telefono_id, message_response, 'text')
+    send_message_and_log(ESTADO_USUARIO, telefono_id, message_response, 'text')
 
     # Imagen
     message_response = get_message(lang, "greeting_text1") # Quizás 'greeting_image_caption' sea más apropiado aquí
-    send_message_and_log(lang,ESTADO_USUARIO, telefono_id, message_response, 'image')
+    send_message_and_log(ESTADO_USUARIO, telefono_id, message_response, 'image')
 
     #Botones pregunta1
     # Definimos los títulos de los botones según el idioma
@@ -491,7 +357,6 @@ def send_initial_messages(ESTADO_USUARIO,telefono_id, lang):
     message_response_for_buttons = get_message(lang, "greeting_text2")
 
     send_message_and_log(
-        lang,
         ESTADO_USUARIO,
         telefono_id, 
         message_response_for_buttons, 
@@ -508,24 +373,31 @@ def request1_messages(ESTADO_USUARIO, telefono_id, lang):
     message_response_for_list = get_message(lang, "portafolio")
 
     send_message_and_log(
-        lang,
         ESTADO_USUARIO,
         telefono_id, 
         message_response_for_list, 
         'list', 
-        list_titles = get_message(lang, "list_titles1"), # El titulo no debe superar 24 caracteres
+        list_titles = ["DDA & Mobile 📱","Websites 🌐","Photography 📸",
+                       "Content Mktg ✍️","Media Strat 📈","Digital Mktg 💻",
+                       "Paid Social 📊","Ecommerce Strat 🛒","Display Media 📺",
+                       "Hablar con agente 🗣️"], # El titulo no debe superar 24 caracteres
         list_ids = ["btn_1","btn_2","btn_3","btn_4","btn_5","btn_6","btn_7","btn_8","btn_9","btn_0"],           # Pasamos los IDs fijos
-        list_descrip= get_message(lang, "list_descrip1") # la descripcion  no debe superar 72 caracteres
+        list_descrip=["DDA And Mobile Campaigns.","Websites","Advertising Photography",
+                      "Content Marketing","Media Strategy","Digital Marketing",
+                      "Paid Social Media","E-commerce Strategy","Display Media",
+                      "Talk to an Agent"] # la descripcion  no debe superar 72 caracteres
     )
 
 def send_adviser_messages(ESTADO_USUARIO, telefono_id,mensaje_procesado, lang):
     """El usuario esta interesado y quiere concretar una cita"""
 
-    chat_history = send_ia_prompt("prompt_ia_yes", telefono_id,lang)
+    #message_response = get_message(lang, "agent")
+    #send_message_and_log(ESTADO_USUARIO, telefono_id, message_response, 'text')
+    chat_history = send_ia_prompt("prompt_ia_yes", telefono_id)
     send_ia_message(ESTADO_USUARIO,telefono_id, mensaje_procesado, chat_history, lang)
 
 
-def send_message_and_log(lang,ESTADO_USUARIO,telefono_id, message_text, message_type='text', button_titles=None, button_ids=None, list_titles=None, list_ids=None, list_descrip=None):
+def send_message_and_log(ESTADO_USUARIO,telefono_id, message_text, message_type='text', button_titles=None, button_ids=None, list_titles=None, list_ids=None, list_descrip=None):
     """
     Construye y envía un mensaje de WhatsApp, y registra la interacción.
     :param telefono_id: ID del teléfono del destinatario.
@@ -598,9 +470,9 @@ def send_message_and_log(lang,ESTADO_USUARIO,telefono_id, message_text, message_
             "interactive": {
                 "type": "list",
                 "body": {"text": message_text},
-                "footer": {"text": get_message(lang, "list_footer_text")},
+                "footer": {"text": get_message("es", "list_footer_text")},
                 "action": {
-                    "button": get_message(lang, "portafolio1"),
+                    "button": "Portafolio",
                     "sections": [
                         {
                             "title": "Servicios disponibles",

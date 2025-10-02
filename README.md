@@ -16,9 +16,3 @@
 #-Se cambia bd SQLite a PostgreSQl para mejorar la persistencia de los datos
 #-Tambien para utilizar mas de Una API para consultar la misma fuente de datos
 
-#Actualiza 05/08/2025:
-#-Se agrega la libreria 'langdetect', con el fin de poder identificar el idioma del usuario
-#-Se crean las funciones: actualizar_idioma_si_cambia, guardar_idioma_usuario, obtener_idioma_usuario, detectar_idioma  
-#para guardar, actualiza y obtener el idioma
-#-se crea la tabal 'UsuarioLang' para capturar el idioma
-#-se actualizan funciones para que siempre soliciten idioma
