@@ -77,8 +77,7 @@ with app.app_context():
 #_______________________________________________________________________________________
 
 # --- Recursos ---
-#IMA_SALUDO_URL = "https://res.cloudinary.com/dioy4cydg/image/upload/v1747884690/imagen_index_wjog6p.jpg"
-IMA_SALUDO_URL = "https://res.cloudinary.com/dioy4cydg/image/upload/v1764819215/Image_dnlh2ldnlh2ldnlh_navidad_e1ler4.png"
+IMA_SALUDO_URL = os.getenv("IMA_SALUDO_URL")
 AGENTE_BOT = "Bot" # Usamos una constante para el agente
 ESTADO_USUARIO = ""
 #_______________________________________________________________________________________
@@ -283,7 +282,7 @@ def procesar_y_responder_mensaje(telefono_id, mensaje_recibido):
         'plataforma': 'whatsapp 📞📱💬',
         'mensaje': mensaje_recibido,
         'estado_usuario': 'recibido',
-        'etiqueta_campana': 'Vacaciones',
+        'etiqueta_campana': 'usuarios nuevos',
         'agente': AGENTE_BOT
     }
 
@@ -378,15 +377,21 @@ def request1_messages(ESTADO_USUARIO, telefono_id, lang):
         telefono_id, 
         message_response_for_list, 
         'list', 
-        list_titles = ["DDA & Mobile 📱","Websites 🌐","Photography 📸",
-                       "Content Mktg ✍️","Media Strat 📈","Digital Mktg 💻",
-                       "Paid Social 📊","Ecommerce Strat 🛒","Display Media 📺",
-                       "Hablar con agente 🗣️"], # El titulo no debe superar 24 caracteres
+        list_titles = ["📱 DDA and Mobile Campaigns","📊 Display Media Planning","🛒 Ecommerce Strategy",
+                       "📣 Paid Social Media","🎯 Audience Studies","🚀 Digital Marketing",
+                       "📰 Media Strategy","🤖 Custom Bot Development","🌐 WebSites",
+                       "🗣️ Talk to an Agent"], # El titulo no debe superar 24 caracteres
         list_ids = ["btn_1","btn_2","btn_3","btn_4","btn_5","btn_6","btn_7","btn_8","btn_9","btn_0"],           # Pasamos los IDs fijos
-        list_descrip=["DDA And Mobile Campaigns.","Websites","Advertising Photography",
-                      "Content Marketing","Media Strategy","Digital Marketing",
-                      "Paid Social Media","E-commerce Strategy","Display Media",
-                      "Talk to an Agent"] # la descripcion  no debe superar 72 caracteres
+        list_descrip=["We unlock the true power of your advertising, revealing how the physical world influences every click and mobile conversion.",
+                      "We implement formats in multichannel, segmenting campaigns and connecting with your audience through creatives based on insights.",
+                      "We develop personalized strategies that leverage the power of leading platforms to amplify your brand's visibility.",
+                      "In the digital age, we ensure you are not left behind, professionally handling the management of your paid social media.",
+                      "We conduct deep analysis to identify the target group and brand opportunities based on trends and behaviors.",
+                      "We have the expertise to boost your online presence with SEO, Social Media management, and PPC campaigns.",
+                      "Professionals ready to develop the best and most appropriate media strategy for your brand.",
+                      "We transform and streamline your operations by designing and deploying custom Chatbots and Agents, along with intelligent automation solutions.",
+                      "We develop your website prioritizing your product and the web environment, offering the best user experience.",
+                      "Select this option if the menu could not satisfy your query or if you need personalized human assistance with a complex topic."] # la descripcion  no debe superar 72 caracteres
     )
 
 def send_adviser_messages(ESTADO_USUARIO, telefono_id,mensaje_procesado, lang):
