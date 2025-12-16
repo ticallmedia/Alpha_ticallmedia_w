@@ -389,7 +389,6 @@ def request1_messages(ESTADO_USUARIO, telefono_id, lang):
                       "Analysis and Trends",
                       "SEO, Social Media & PPC",
                       "Best Media Strategy",
-                      "Pro Media Strategy",
                       "Chatbots & Automation",
                       "Web Dev and UX",
                       "Expert Human Assistance"] # la descripcion  no debe superar 72 caracteres
