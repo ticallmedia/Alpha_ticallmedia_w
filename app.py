@@ -382,17 +382,17 @@ def request1_messages(ESTADO_USUARIO, telefono_id, lang):
                        "📰 Media Strategy","🤖 Custom Bot Development","🌐 WebSites",
                        "🗣️ Talk to an Agent"], # El titulo no debe superar 24 caracteres
         list_ids = ["btn_1","btn_2","btn_3","btn_4","btn_5","btn_6","btn_7","btn_8","btn_9","btn_0"],           # Pasamos los IDs fijos
-        list_descrip=["Ad Power: Physical world influences every click and mobile conversion.",
-                      "Implement multichannel formats, segmenting with insight-based creatives.",
+        list_descrip=["Ad Power: Physical world influences clicks and mobile conversions.",
+                      "Implement multichannel formats, segmenting with data-driven creatives.",
                       "Develop personalized strategies using leading platforms for visibility.",
-                      "Professional paid social media management. We ensure you stay competitive.",
+                      "Professional Paid Social Management. We ensure you stay competitive.",
                       "Deep analysis: Identify audience and brand opportunities via trends.",
-                      "Boost presence with expert SEO, Social Media management, and PPC campaigns.",
-                      "We have the expertise to develop the best media strategy for your brand.",
+                      "Boost presence with expert SEO, Social Media, and PPC campaigns.",
+                      "We have expertise to develop the best media strategy for your brand.",
                       "Professionals ready to develop the best media strategy for your brand.",
-                      "Transform operations with Chatbots, Agents, and smart automation solutions.",
-                      "Develop your website prioritizing product and best User Experience (UX).",
-                      "Select if menu is insufficient or if you require expert human assistance."] # la descripcion  no debe superar 72 caracteres
+                      "Transform operations with Chatbots, Agents, and smart automation.",
+                      "Develop website prioritizing product and best User Experience (UX).",
+                      "Select if menu is insufficient or you require expert human assistance."] # la descripcion  no debe superar 72 caracteres
     )
 
 def send_adviser_messages(ESTADO_USUARIO, telefono_id,mensaje_procesado, lang):
