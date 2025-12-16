@@ -395,6 +395,7 @@ def request1_messages(ESTADO_USUARIO, telefono_id, lang):
                       "Select if menu is insufficient or you require expert human assistance."] # la descripcion  no debe superar 72 caracteres
     )
 
+
 def send_adviser_messages(ESTADO_USUARIO, telefono_id,mensaje_procesado, lang):
     """El usuario esta interesado y quiere concretar una cita"""
 
