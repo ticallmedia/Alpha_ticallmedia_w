@@ -382,16 +382,17 @@ def request1_messages(ESTADO_USUARIO, telefono_id, lang):
                        "📰 Media Strategy","🤖 Custom Bot Development","🌐 WebSites",
                        "🗣️ Talk to an Agent"], # El titulo no debe superar 24 caracteres
         list_ids = ["btn_1","btn_2","btn_3","btn_4","btn_5","btn_6","btn_7","btn_8","btn_9","btn_0"],           # Pasamos los IDs fijos
-        list_descrip=["We unlock the true power of your advertising, revealing how the physical world influences every click and mobile conversion.",
-                      "We implement formats in multichannel, segmenting campaigns and connecting with your audience through creatives based on insights.",
-                      "We develop personalized strategies that leverage the power of leading platforms to amplify your brand's visibility.",
-                      "In the digital age, we ensure you are not left behind, professionally handling the management of your paid social media.",
-                      "We conduct deep analysis to identify the target group and brand opportunities based on trends and behaviors.",
-                      "We have the expertise to boost your online presence with SEO, Social Media management, and PPC campaigns.",
+        list_descrip=["Discover your ad power: physical world influences every mobile conversion.",
+                      "We implement multichannel formats, segmenting with insight-based creatives.",
+                      "We develop personalized strategies with leading platforms for your visibility.",
+                      "Manage your paid social media professionally. We ensure you don't fall behind.",
+                      "Deep analysis: we identify your audience and brand opportunities through trends.",
+                      "We boost your online presence with expert SEO, Social Media, and PPC campaigns.",
+                      "We have the expertise to develop the best media strategy for your brand.",
                       "Professionals ready to develop the best and most appropriate media strategy for your brand.",
-                      "We transform and streamline your operations by designing and deploying custom Chatbots and Agents, along with intelligent automation solutions.",
-                      "We develop your website prioritizing your product and the web environment, offering the best user experience.",
-                      "Select this option if the menu could not satisfy your query or if you need personalized human assistance with a complex topic."] # la descripcion  no debe superar 72 caracteres
+                      "We transform your operations with Chatbots, Agents, and automation solutions.",
+                      "We develop your website prioritizing your product and the best User Experience (UX).",
+                      "Select this if the menu doesn't satisfy or you require expert human assistance."] # la descripcion  no debe superar 72 caracteres
     )
 
 def send_adviser_messages(ESTADO_USUARIO, telefono_id,mensaje_procesado, lang):
