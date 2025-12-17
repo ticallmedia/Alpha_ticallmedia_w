@@ -173,7 +173,8 @@ def send_ia_message(ESTADO_USUARIO, telefono_id, message_text, chat_history_prom
     openai.api_key = os.environ.get("OPENAI_API_KEY")
     
     # 1. Si el usuario solicita ver el portafolio
-    if message_text in ["portafolio", "ver servicios", "mostrar opciones", "servicios"]:
+    #if message_text in ["portafolio", "ver servicios", "mostrar opciones", "servicios"]:
+    if message_text in ["Portfolio","View Services","Show Options","Services"]:
         request1_messages(telefono_id, lang)
         return
 
