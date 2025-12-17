@@ -190,7 +190,7 @@ def send_ia_message(ESTADO_USUARIO, telefono_id, message_text, chat_history_prom
     try:
         # Solicitar respuesta a OpenAI
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4o-mini" #"gpt-3.5-turbo",
             messages=chat_history
         )
 
