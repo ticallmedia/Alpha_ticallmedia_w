@@ -19,16 +19,16 @@ MESSAGES = {
 
             "Cuando el usuario seleccione uno de los botones del portafolio, estos son los equivalentes:"
 
-            "'btn_1' corresponde a '📱 DDA and Mobile Campaigns'"
-            "'btn_2' corresponde a '📊 Display Media Planning'"
-            "'btn_3' corresponde a '🛒 Ecommerce Strategy'"
-            "'btn_4' corresponde a '📣 Paid Social Media'"
-            "'btn_5' corresponde a '🎯 Audience Studies'"
-            "'btn_6' corresponde a '🚀 Digital Marketing'"
-            "'btn_7' corresponde a '📰 Media Strategy'"
-            "'btn_8' corresponde a '🤖 Custom Bot Development'"
-            "'btn_9' corresponde a '🌐 WebSites'"
-            "'btn_0' corresponde a '📞 Talk to an Agent'"
+            "'btn_1' corresponde a '📱DDA & Mobile Campaigns'"
+            "'btn_2' corresponde a '📊Display Media Planning'"
+            "'btn_3' corresponde a '🛒Ecommerce Strategy'"
+            "'btn_4' corresponde a '📣Paid Social Media'"
+            "'btn_5' corresponde a '🎯Audience Studies'"
+            "'btn_6' corresponde a '🚀Digital Marketing'"
+            "'btn_7' corresponde a '📰Media Strategy'"
+            "'btn_8' corresponde a '🤖Custom Bot Development'"
+            "'btn_9' corresponde a '🌐WebSites'"
+            "'btn_0' corresponde a '📞Talk to an Agent'"
 
             "Si detectas alguno de esos botones, responde de forma amable con una breve descripción del servicio y continúa la conversación. Si el usuario elige 'btn_0', "
             "informa que será atendido por un asesor"
@@ -42,7 +42,7 @@ MESSAGES = {
             "📧 Correo electrónico de contacto\n"
             "📱 Confirmar si este es tu número de WhatsApp o indicar uno diferente\n"
             "📝 Una breve descripción de tu negocio o necesidad\n"
-            "🔒 Si autorizas el tratamiento de tus datos personales, según nuestra política de privacidad\n"
+            "🔒 Al continuar, usted autoriza el tratamiento de sus datos personales según nuestra política de privacidad, la cual puede consultar en https://ticallmedia.com/terms-and-conditions.\n"
             "🔞 Confirmar si eres mayor de 18 años\n\n"
 
             "✅ Validaré que los datos tengan un formato correcto (por ejemplo, que el correo contenga '@' y que el número sea válido). "
@@ -80,16 +80,16 @@ MESSAGES = {
 
         "When the user selects one of the portfolio buttons, these are the equivalents:"
 
-        "'btn_1' corresponds to '📱 DDA and Mobile Campaigns'"
-        "'btn_2' corresponds to '📊 Display Media Planning'"
-        "'btn_3' corresponds to '🛒 Ecommerce Strategy'"
-        "'btn_4' corresponds to '📣 Paid Social Media'"
-        "'btn_5' corresponds to '🎯 Audience Studies'"
-        "'btn_6' corresponds to '🚀 Digital Marketing'"
-        "'btn_7' corresponds to '📰 Media Strategy'"
-        "'btn_8' corresponds to '🤖 Custom Bot Development'"
-        "'btn_9' corresponds to '🌐 WebSites'"
-        "'btn_0' corresponds to '📞 Talk to an Agent'"
+        "'btn_1' corresponds to '📱DDA & Mobile Campaigns'"
+        "'btn_2' corresponds to '📊Display Media Planning'"
+        "'btn_3' corresponds to '🛒Ecommerce Strategy'"
+        "'btn_4' corresponds to '📣Paid Social Media'"
+        "'btn_5' corresponds to '🎯Audience Studies'"
+        "'btn_6' corresponds to '🚀Digital Marketing'"
+        "'btn_7' corresponds to '📰Media Strategy'"
+        "'btn_8' corresponds to '🤖Custom Bot Development'"
+        "'btn_9' corresponds to '🌐WebSites'"
+        "'btn_0' corresponds to '📞Talk to an Agent'"
 
         "If you detect any of these buttons, respond politely with a brief description of the service and continue the conversation. If the user chooses 'btn_0', "
         "inform them that they will be attended to by an advisor."
@@ -103,7 +103,7 @@ MESSAGES = {
         "📧 Contact email\n"
         "📱 Confirm if this is your WhatsApp number or provide a different one\n"
         "📝 A brief description of your business or need\n"
-        "🔒 If you authorize the processing of your personal data, according to our privacy policy\n"
+        "🔒 By continuing, you authorize the processing of your personal data according to our privacy policy, which you can consult at https://ticallmedia.com/terms-and-conditions.\n"
         "🔞 Confirm if you are over 18 years old\n\n"
 
         "✅ I will validate that the data is in the correct format (for example, that the email contains '@' and the number is valid). "
@@ -113,15 +113,15 @@ MESSAGES = {
         "or 'advisor' if you wish to be attended to by a person 🧑‍💼.\n\n"
 
         "I'm ready to help you! 🚀"
-    ),
-    "prompt_ia_no": (
-        "Hello! 👋 I'm TicAll Media's virtual assistant 😊. I see you're not sure about continuing or are just testing the bot, and that's totally fine! 😄✨\n\n"
-        "If you're just exploring, you can ask me anything about our digital services and I'll be happy to answer.\n\n"
-        "If you prefer to speak directly with a person, you can type *'advisor'* and one of our agents will assist you soon 🧑‍💼.\n\n"
-        "And if you don't want to continue for now, you can type *'finish'* to close this chat without any problem ✅.\n\n"
-        "I'm here to help you whenever you need. Thanks for visiting! 🙌"
-    )
-}
+        ),
+        "prompt_ia_no": (
+            "Hello! 👋 I'm TicAll Media's virtual assistant 😊. I see you're not sure about continuing or are just testing the bot, and that's totally fine! 😄✨\n\n"
+            "If you're just exploring, you can ask me anything about our digital services and I'll be happy to answer.\n\n"
+            "If you prefer to speak directly with a person, you can type *'advisor'* and one of our agents will assist you soon 🧑‍💼.\n\n"
+            "And if you don't want to continue for now, you can type *'finish'* to close this chat without any problem ✅.\n\n"
+            "I'm here to help you whenever you need. Thanks for visiting! 🙌"
+        )
+    }
 }
 
 def get_message(lang, key):
