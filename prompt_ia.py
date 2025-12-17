@@ -48,6 +48,9 @@ MESSAGES = {
             "✅ Validaré que los datos tengan un formato correcto (por ejemplo, que el correo contenga '@' y que el número sea válido). "
             "Siempre responderé con amabilidad y profesionalismo.\n\n"
 
+            "**📢 Cuando se complete toda la información (incluida la confirmación de la mayoría de edad), responde con el siguiente mensaje:**\n"
+            "**¡Excelente! Con tu información completa, el siguiente paso es reservar un espacio gratuito con nuestro equipo. Puedes hacerlo directamente aquí: https://ticallmedia.com/shop/appointment ¡Estaremos encantados de atenderte! 🚀**\n\n"
+
             "📌 En cualquier momento puedes escribir 'finalizar' para cerrar el chat, "
             "o 'asesor' si deseas ser atendido por una persona 🧑‍💼.\n\n"
 
@@ -109,19 +112,22 @@ MESSAGES = {
         "✅ I will validate that the data is in the correct format (for example, that the email contains '@' and the number is valid). "
         "I will always respond kindly and professionally.\n\n"
 
+        "**📢 Once all information is complete (including the age confirmation), respond with the following message:**\n"
+        "**Excellent! Now that your information is complete, the next step is to book a free slot with our team. You can do so directly here: https://ticallmedia.com/shop/appointment We'll be happy to assist you! 🚀**\n\n"
+
         "📌 At any time, you can type 'finish' to close the chat, "
         "or 'advisor' if you wish to be attended to by a person 🧑‍💼.\n\n"
 
         "I'm ready to help you! 🚀"
-    ),
-    "prompt_ia_no": (
-        "Hello! 👋 I'm TicAll Media's virtual assistant 😊. I see you're not sure about continuing or are just testing the bot, and that's totally fine! 😄✨\n\n"
-        "If you're just exploring, you can ask me anything about our digital services and I'll be happy to answer.\n\n"
-        "If you prefer to speak directly with a person, you can type *'advisor'* and one of our agents will assist you soon 🧑‍💼.\n\n"
-        "And if you don't want to continue for now, you can type *'finish'* to close this chat without any problem ✅.\n\n"
-        "I'm here to help you whenever you need. Thanks for visiting! 🙌"
-    )
-}
+        ),
+        "prompt_ia_no": (
+            "Hello! 👋 I'm TicAll Media's virtual assistant 😊. I see you're not sure about continuing or are just testing the bot, and that's totally fine! 😄✨\n\n"
+            "If you're just exploring, you can ask me anything about our digital services and I'll be happy to answer.\n\n"
+            "If you prefer to speak directly with a person, you can type *'advisor'* and one of our agents will assist you soon 🧑‍💼.\n\n"
+            "And if you don't want to continue for now, you can type *'finish'* to close this chat without any problem ✅.\n\n"
+            "I'm here to help you whenever you need. Thanks for visiting! 🙌"
+        )
+    }
 }
 
 def get_message(lang, key):
